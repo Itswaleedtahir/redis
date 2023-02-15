@@ -1,0 +1,9 @@
+{
+  "port": 5000,
+  "db": {
+    "username": "root",
+    "password": "",
+    "name": "geni_hunt",
+    "host": "localhost"
+  }
+}
