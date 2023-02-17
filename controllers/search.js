@@ -45,19 +45,11 @@ module.exports = {
           if (rq[k]) OrCond.push({ [k]: rq[k] });
         }
       }
-      console.log(OrCond);
       var comp = await TotalData.findAll({
         where: {
-          [Op.or]: [OrCond],
-          // Firmnavn:Firmnavn
+          [Op.or]: OrCond,
         }
       });
-    //   client.HSET('foo', (err, reply) => {
-    //     if (err){
-    //       console.log("err",err)
-    //     }
-    //     console.log(';reply',reply);
-    // });
     client.set(Firmnavn,JSON.stringify(comp) ,redis.print);
     return res.json({comp})
 
@@ -83,10 +75,9 @@ module.exports = {
             "virksomhedsform",
           ],
         ],
-      });
-      res
-        .status(200)
-        .send({comp});
+      })
+       client.set("virksomhedsform",JSON.stringify(comp) ,redis.print);
+    return res.json({comp})
     } catch (err) {
       return res
         .status(err.status || 500)
@@ -104,9 +95,8 @@ Industry: async (req,res)=>{
         ],
         order: [["branchebetegnelse_primær", "ASC"]]
       });
-      res
-        .status(200)
-        .send({ind});
+      client.set("branchebetegnelse_primær",JSON.stringify(ind) ,redis.print);
+      return res.json({ind})
   } catch (err) {
     return res
     .status(err.status || 500)
@@ -123,9 +113,8 @@ IntervalEmployee: async (req,res)=>{
         ],
       ],
     });
-      res
-        .status(200)
-        .send({employee});
+    client.set("ansatte_interval",JSON.stringify(employee) ,redis.print);
+    return res.json({employee})
   } catch (err) {
     return res
     .status(err.status || 500)
@@ -142,9 +131,8 @@ Region: async (req,res)=>{
         ],
       ],
     });
-      res
-        .status(200)
-        .send({region});
+    client.set("p_region",JSON.stringify(region) ,redis.print);
+    return res.json({region})
   } catch (err) {
     return res
     .status(err.status || 500)
@@ -161,9 +149,8 @@ Muncipality: async (req,res)=>{
         ],
       ],
     });
-      res
-        .status(200)
-        .send({muncipality});
+    client.set("p_kommunenavn",JSON.stringify(muncipality) ,redis.print);
+    return res.json({muncipality})
   } catch (err) {
     return res
     .status(err.status || 500)
@@ -173,9 +160,8 @@ Muncipality: async (req,res)=>{
 initialdata: async (req,res)=>{
   try {
     const initialdata = await TotalData.findAll({ order: Sequelize.literal('rand()'), limit: 9  });
-      res
-        .status(200)
-        .send({initialdata});
+    client.set("initialdata",JSON.stringify(initialdata) ,redis.print);
+      return res.json({initialdata})
   } catch (err) {
     console.log(err);
     return res
